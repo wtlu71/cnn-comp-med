@@ -31,9 +31,9 @@ class H5Dataset(Dataset):
         self._open_file()
         img = self.imgs[idx]
         # unnecessary b/c of 
-        # img = np.transpose(img, (2,0,1))
+        img = np.transpose(img, (2,0,1))
         # normalize from RGBs from 0 to 255 to float between 0 and 1
-        img = (img.astype("float32") / 255.0).permute(2,0,1)  # HWC -> CHW
+        img = torch.from_numpy(img.astype("float32") / 255.0)  # HWC -> CHW
         if self.transform:
             img = self.transform(img)
         label = int(self.labels[idx])
