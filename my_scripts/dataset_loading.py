@@ -16,19 +16,22 @@ class H5Dataset(Dataset):
         self.img_h5_file = None  # lazy open
         self.label_h5_file = None  # lazy open
 
-    def _open_file(self):
-          self.img_h5_file = h5py.File(self.img_h5_path, "r")
-          self.label_h5_file = h5py.File(self.label_h5_path, "r")
-          self.imgs = self.img_h5_file[self.img_key]
-          self.labels = self.label_h5_file[self.label_key]
+    def _ensure_open(self):
+        if self.img_h5_file is None or self.label_h5_file is None:
+            self.img_h5_file = h5py.File(self.img_h5_path, "r")
+            self.label_h5_file = h5py.File(self.label_h5_path, "r")
+            self.imgs = self.img_h5_file[self.img_key]
+            self.labels = self.label_h5_file[self.label_key]
 
     def __len__(self):
-        self._open_file()
-        return len(self.imgs)
+        with h5py.File(self.img_h5_path, "r") as f:
+            return len(f[self.img_key])
+        # self._ensure_open()
+        # return len(self.imgs)
 
     # inherits __getitem__ from torch Dataset and overwrites it for our purposes
     def __getitem__(self, idx):
-        self._open_file()
+        self._ensure_open()
         img = self.imgs[idx]
         # unnecessary b/c of 
         img = np.transpose(img, (2,0,1))
