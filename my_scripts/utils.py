@@ -21,8 +21,8 @@ def run_epoch(loader, model, criterion, optimizer=None, train=True, device='cpu'
     
     for images, targets in loader:
         # TODO: Move to device
-        images = images.to(device)
-        targets = targets.to(device)
+        images = images.to(device, non_blocking=True)
+        targets = targets.to(device, non_blocking=True)
         
         with torch.set_grad_enabled(train):
             # TODO: Forward pass
