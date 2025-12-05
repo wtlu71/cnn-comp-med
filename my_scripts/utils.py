@@ -62,4 +62,4 @@ def run_epoch(loader, model, criterion, optimizer=None, train=True, device='cpu'
     except ValueError:
         auc_val = np.nan
     
-    return np.mean(losses), acc, sens, spec, auc_val
+    return np.mean(losses), acc, sens, spec, auc_val,confusion_matrix(y_true, y_pred)
