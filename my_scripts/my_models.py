@@ -17,6 +17,38 @@ def conv_block(in_ch, out_ch):
 #         nn.ReLU(inplace=True)
 #     )
 
+class LargeCNN(nn.Module):
+    """Small CNN with 3 convolutional blocks"""
+    def __init__(self, in_channels=3, num_classes=2, channels=(16, 32, 64,128,128,256), dropout=0.2):
+        super().__init__()
+        c1, c2, c3,c4,c5,c6 = channels
+
+        # convolutional feature extractor
+        self.features = nn.Sequential(
+            # TODO: Implement 3 Blocks
+            conv_block(in_channels, c1),
+            conv_block(c1, c2),
+            conv_block(c2, c3),
+            conv_block(c3, c4),
+            conv_block(c4, c5),
+            conv_block(c5, c6),
+            nn.Dropout(dropout)
+        )
+
+        # global average pooling (nn.AdaptiveAvgPool2d) compresses the spatial dimensions to NxCx1x1
+        self.gap = nn.AdaptiveAvgPool2d((1, 1))
+        # TODO: Linear layer for classification
+        self.classifier = nn.Linear(c6, num_classes)
+
+    #  forward pass (how the input passes through the CNN layers)
+    def forward(self, x):
+        x = self.features(x)
+        x = self.gap(x)
+        # flatten until dimension 1 so that NxCx1x1 becomes NxC- suitable for linear layer
+        x = torch.flatten(x, 1)
+        # print(x.shape)
+        x = self.classifier(x)
+        return x
 # nn.Module is the parent class for neural network modules in PyTorch
 class SmallCNN(nn.Module):
     """Small CNN with 3 convolutional blocks"""
