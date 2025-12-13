@@ -20,17 +20,17 @@ def run_epoch(loader, model, criterion, optimizer=None, train=True, device='cpu'
     all_targets = []
     
     for images, targets in loader:
-        # TODO: Move to device
+        # move to device
         images = images.to(device, non_blocking=True)
         targets = targets.to(device, non_blocking=True)
         
         with torch.set_grad_enabled(train):
-            # TODO: Forward pass
+            # forward pass
             logits = model(images)
             loss = criterion(logits, targets)
         
         if train:
-            # TODO: Backward pass
+            #backward pass
             # do a backward pass to get gradients
             # do i do optimizer.zero_grad()?
             loss.backward()
@@ -38,7 +38,7 @@ def run_epoch(loader, model, criterion, optimizer=None, train=True, device='cpu'
             optimizer.step()
             
         
-        # TODO: Store predictions and targets
+        # store predictions and targets
         probs = torch.softmax(logits, dim=1)[:, 1].detach().cpu().numpy()
         # add probs for class 1 to all_preds list
         all_preds.extend(probs.tolist())
@@ -46,12 +46,12 @@ def run_epoch(loader, model, criterion, optimizer=None, train=True, device='cpu'
         all_targets.extend(targets.detach().cpu().numpy().tolist())
         losses.append(loss.item())
     
-    # TODO: Compute metrics
+    # compute metrics
     y_true = np.array(all_targets)
     y_prob = np.array(all_preds)
     y_pred = (y_prob >= 0.5).astype(int)
     
-    # TODO: Compute accuracy, sensitivity, specificity, and AUC
+    # compute accuracy, sensitivity, specificity,  AUC
     acc = accuracy_score(y_true, y_pred)
     sens = recall_score(y_true, y_pred)
     tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()

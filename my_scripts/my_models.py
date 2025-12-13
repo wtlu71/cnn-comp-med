@@ -25,7 +25,6 @@ class LargeCNN(nn.Module):
 
         # convolutional feature extractor
         self.features = nn.Sequential(
-            # TODO: Implement 3 Blocks
             conv_block(in_channels, c1),
             conv_block(c1, c2),
             conv_block(c2, c3),
@@ -37,7 +36,7 @@ class LargeCNN(nn.Module):
 
         # global average pooling (nn.AdaptiveAvgPool2d) compresses the spatial dimensions to NxCx1x1
         self.gap = nn.AdaptiveAvgPool2d((1, 1))
-        # TODO: Linear layer for classification
+        # linear layer for classification
         self.classifier = nn.Linear(c6, num_classes)
 
     #  forward pass (how the input passes through the CNN layers)
@@ -58,7 +57,6 @@ class SmallCNN(nn.Module):
         
         # convolutional feature extractor
         self.features = nn.Sequential(
-            # TODO: Implement 3 Blocks
             conv_block(in_channels, c1),
             conv_block(c1, c2),
             conv_block(c2, c3),
@@ -67,7 +65,7 @@ class SmallCNN(nn.Module):
         
         # global average pooling (nn.AdaptiveAvgPool2d) compresses the spatial dimensions to NxCx1x1
         self.gap = nn.AdaptiveAvgPool2d((1, 1))
-        # TODO: Linear layer for classification
+        # linear layer for classification
         self.classifier = nn.Linear(c3, num_classes)
     
     #  forward pass (how the input passes through the CNN layers)
